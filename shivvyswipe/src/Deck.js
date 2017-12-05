@@ -11,7 +11,6 @@ const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
 
 class Deck extends Component {
-
   constructor(props) {
     super(props);
 
@@ -23,10 +22,10 @@ class Deck extends Component {
       },
       onPanResponderRelease: (event, gesture) => {
         if (gesture.dx > SWIPE_THRESHOLD) {
-          this.forceSwipeRight();
+          this.forceSwipe('right');
         }
         else if (gesture.dx < -SWIPE_THRESHOLD) {
-          this.forceSwipeLeft();
+          this.forceSwipe('left');
         }
         else {
           this.resetPosition();
@@ -37,16 +36,10 @@ class Deck extends Component {
     this.state = { panResponder, position };
   }
 
-  forceSwipeRight() {
+  forceSwipe(direction) {
+    const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
     Animated.timing(this.state.position, {
-      toValue: { x: SCREEN_WIDTH, y: 0 },
-      duration: SWIPE_OUT_DURATION
-    }).start();
-  }
-
-  forceSwipeLeft() {
-    Animated.timing(this.state.position, {
-      toValue: { x: -SCREEN_WIDTH, y: 0 },
+      toValue: { x, y: 0 },
       duration: SWIPE_OUT_DURATION
     }).start();
   }
@@ -56,7 +49,6 @@ class Deck extends Component {
       toValue: { x: 0, y: 0 }
     }).start();
   }
-
 
   getCardStyle() {
     const { position } = this.state;
